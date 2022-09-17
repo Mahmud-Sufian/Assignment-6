@@ -5,28 +5,38 @@ const loadPhones = () => {
     // reset input field
     document.getElementById('input-field').value = "";
 
-    // fetching data
+    // spinner/toggle
+    spinner('block'); 
+
+    // fetching data all phones
     fetch(url)
     .then(res => res.json())
     .then(data => viewPhone(data.data))
 
 }
+
+
+// all phone data receive and show ui
 const viewPhone = (phones) => {
 
-
-    // console.log(phones)
+    // error handle
+    if(!phones.length){
+        document.getElementById('error').innerText = '404...No Data Found';
+    }
+    else{ 
+    document.getElementById('error').innerText = '';
+    }
+ 
+      
     const phonesContainer = document.getElementById('phones-container');
     document.getElementById('phones-container').textContent = '';
     document.getElementById('singlePhone-details').textContent = '';
 
-    for(const phone of phones){
-        // console.log(phone.slug)
-        const div = document.createElement('div');
-        // div.classList.add('card')
-        // div.classList.add('w-25')
+    for(const phone of phones){ 
+        const div = document.createElement('div'); 
         div.classList.add('col-md-4')
         div.innerHTML = ` 
-        <div onclick="singlePhone('${phone.slug}')" class="card mt-2" style="width: 18rem;">
+        <div onclick="singlePhone('${phone.slug}')" id="phone-toggle" class="card mt-2" style="width: 18rem;">
                 <img src="${phone.image}" class="card-img-top"  alt="...">
                 <div class="card-body">
                     <h5 class="card-title">${phone.brand}</h5>
@@ -37,7 +47,7 @@ const viewPhone = (phones) => {
            
         phonesContainer.appendChild(div);
     }
-
+    spinner('none'); 
 }
 
 // single phone details
@@ -68,13 +78,7 @@ const detailsPhone = (detail) => {
     singlePhoneContainer.appendChild(div); 
 
 }
-
-// const spinner = (isLoading) => {
-//     if(!isLoading){
-//         document.getElementById('spinner-loading').style.classList.add('d-block');
-//     }
-//     else{
-//         // document.getElementById('spinner-loading').style.classList.remove('d-none');
-//     }
-// }
-// spinner(false)
+// spinner
+const spinner = (displayStyle) => {
+    document.getElementById('spinner-loading').style.display = displayStyle;
+} 
